@@ -4,7 +4,10 @@ keys = {
 	end,
 	control = function()
 		return (love.keyboard.isDown(love.key_rctrl) or love.keyboard.isDown(love.key_lctrl))
-	end
+	end,
+	alt = function()
+		return (love.keyboard.isDown(love.key_ralt) or love.keyboard.isDown(love.key_lalt))
+	end,
 }
 
 geo = {
@@ -205,7 +208,6 @@ objects = {
 				o.dead = true
 				return
 			end
-			o.segments = math.ceil(geo.distance(o.head.x,o.head.y, o.tail.x,o.tail.y)/objects.arc.lenPerSegment)
 		end,
 		
 		getNew = function(nodeTail, nodeHead)
@@ -317,7 +319,7 @@ update = function(dt)
 	music.currentTime = music.currentTime + dt
 	music.fire = music.currentTime - music.lastTime > music.quantizer 
 	if music.fire then
-		music.currentTime = music.lastTime
+		music.lastTime = music.lastTime + music.quantizer
 	end
 	for k,v in ipairs(objects.collection) do
 		v:update(dt)
@@ -337,14 +339,16 @@ mousepressed = function(x,y,button)
 		end
 	end
 	
+	local increaseLength = (button == love.mouse_left and keys.alt() and clickedV ~= nil and clickedV.objType == objects.types.arc)
+	local decreaseLength = (button == love.mouse_right and keys.alt() and clickedV ~= nil and clickedV.objType == objects.types.arc)
+
 	local createNode = (button == love.mouse_left and clickedV == nil)
 	local createArc = (button == love.mouse_left and keys.shift() and selection.object ~= nil and (clickedV == nil or clickedV.objType == objects.types.node))
-	local destroy = (button == love.mouse_right and clickedV ~= nil)
+	local destroy = (button == love.mouse_right and clickedV ~= nil and not decreaseLength)
 	
 	local stimulate = (button == love.mouse_left and keys.control() and clickedV ~= nil)
 	local increaseStrength = (button == love.mouse_left and keys.shift() and clickedV ~= nil)
-
-	
+		
 	local headNode = nil
 	if createNode then
 		headNode = objects.node.getNew(x,y)
@@ -389,6 +393,19 @@ mousepressed = function(x,y,button)
 	
 	if increaseStrength then
 		clickedV.activationStrength = clickedV.activationStrength + 0.5
+	end
+	
+	if increaseLength then
+		clickedV.segments = clickedV.segments + 1
+	end
+	
+	if decreaseLength then
+		if clickedV.segments > 1 then
+			clickedV.segments = clickedV.segments - 1
+		else
+			clickedV:destroy()
+			selection.object = nil
+		end
 	end
 	
 end

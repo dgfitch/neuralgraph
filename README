@@ -1,0 +1,21 @@
+NeuralGraph: a mouse-driven graph editor that allows you to send signals around your graph as if it were a neural network.  Audio output triggered by nodes "firing" is coming very soon.
+
+To use: (these controls will probably change in the not-too-distant future)
+
+
+                            Empty space                    A node                       An arc
+----------------------+-----------------------------------------------------------------------------------
+Left-click            |   create a new node          select this node              select this arc
+Right-click           |   deselect everything      decrease node's strength*    decrease arc's strength*
+                      |
+Shift-left-click      | draw an arc to new node    increase node's strength     increase arc's strength
+Shift-right-click     |   deselect everything      decrease node's strength*    decrease arc's strength*
+                      |
+Control-left-click    |   create a new node            STIMULATE NODE!               stimulate arc
+Control-right-click   |   deselect everything      decrease node's strength*    decrease arc's strength*
+                      |
+Alt-left-click        |   create a new node              not assigned          increase transmission time
+Alt-right-click       |   deselect everything      decrease node's strength*   decrease transmission time*
+----------------------+-----------------------------------------------------------------------------------
+
+If a strength or transmission time is reduced to zero, the corresponding entity is destroyed.
