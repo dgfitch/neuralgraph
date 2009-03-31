@@ -51,8 +51,8 @@ objects = {
 		activationStrength = 1,
 		activationThreshold = 1,
 		
-		stimulate = function(o)
-			o.activation = o.activation + objects.node.activationStrength
+		stimulate = function(o, strength)
+			o.activation = o.activation + (strength*objects.node.activationStrength)
 		end,
 		
 		fire = function(o)
@@ -65,7 +65,7 @@ objects = {
 			for k,v in ipairs(arcs) do
 				table.insert(objects.collection, objects.signal.getNew(v))
 			end
-			o.activation = math.max(0,o.activation - objects.node.activationStrength)
+			o.activation = math.max(0,o.activation - o.activationStrength)
 		end,
 		
 		contains = function(o,x,y)
@@ -86,10 +86,10 @@ objects = {
 			
 			if selection.object == o then
 				love.graphics.setColor(objects.selectedColor)
-				love.graphics.setLineWidth(objects.selectedWidth)
+				love.graphics.setLineWidth(objects.selectedWidth + o.activationStrength)
 			else
 				love.graphics.setColor(objects.nonSelectedColor)
-				love.graphics.setLineWidth(objects.nonSelectedWidth)
+				love.graphics.setLineWidth(objects.nonSelectedWidth + o.activationStrength)
 			end
 			love.graphics.circle(love.draw_line,o.x,o.y,o.radius,36)
 		end,
@@ -107,16 +107,17 @@ objects = {
 			if music.fire then
 				if o.activation > objects.node.activationThreshold then
 					o:fire()
-					o.activation = -objects.node.activationStrength/2
+					o.activation = -o.activationStrength/4
 				end
 			end
-			o.activation = o.activation * math.exp(-dt)
+			o.activation = o.activation * math.exp(-2*dt)
 		end,
 		
 		getNew = function(nx,ny)
 			return {
 				x = nx,
 				y = ny,
+				activationStrength = objects.node.activationStrength,
 				radius = objects.node.defaultRadius,
 				activation = 0,
 				stimulate = objects.node.stimulate,
@@ -138,7 +139,7 @@ objects = {
 		thickness = 3,
 		
 		segmentMarkerColor = love.graphics.newColor(0,0,0),
-		segmentMarkerRadius = 5,
+		segmentMarkerRadius = 4,
 		lenPerSegment = 50,
 		
 		exists = function(nodeTail, nodeHead)
@@ -162,9 +163,9 @@ objects = {
 		draw = function(o)
 			if selection.object == o then
 				love.graphics.setColor(objects.selectedColor)
-				love.graphics.setLineWidth(objects.selectedWidth)
+				love.graphics.setLineWidth(objects.selectedWidth + o.activationStrength)
 			else
-				love.graphics.setLineWidth(objects.nonSelectedWidth)
+				love.graphics.setLineWidth(objects.nonSelectedWidth + o.activationStrength)
 				love.graphics.setColor(objects.nonSelectedColor)
 			end
 			
@@ -189,7 +190,7 @@ objects = {
 				local d = s/(o.segments)
 				local sx = (o.tail.x - o.head.x)*d + o.head.x
 				local sy = (o.tail.y - o.head.y)*d + o.head.y
-				love.graphics.circle(love.draw_fill,sx,sy,objects.arc.segmentMarkerRadius)
+				love.graphics.circle(love.draw_fill,sx,sy,objects.arc.segmentMarkerRadius + o.activationStrength)
 			end			
 		end,
 		
@@ -212,6 +213,7 @@ objects = {
 				head = nodeHead,
 				tail = nodeTail,
 				segments = 1,
+				activationStrength = 1,
 				contains = objects.arc.contains,
 				draw = objects.arc.draw,
 				update = objects.arc.update,
@@ -245,7 +247,7 @@ objects = {
 			end
 			if s.progress > s.arc.segments then
 				s.dead = true
-				s.arc.head:stimulate()
+				s.arc.head:stimulate(s.arc.activationStrength)
 			end
 			s.progress = s.progress + dt/music.quantizer 
 		end,
@@ -317,14 +319,13 @@ update = function(dt)
 	if music.fire then
 		music.currentTime = music.lastTime
 	end
-	garbageCollect()
-
 	for k,v in ipairs(objects.collection) do
 		v:update(dt)
 	end
 	if love.mouse.isDown(love.mouse_left) and selection.object ~= nil then
 		selection.time = selection.time + dt
 	end
+	garbageCollect()
 end
 
 mousepressed = function(x,y,button)
@@ -341,6 +342,8 @@ mousepressed = function(x,y,button)
 	local destroy = (button == love.mouse_right and clickedV ~= nil)
 	
 	local stimulate = (button == love.mouse_left and keys.control() and clickedV ~= nil)
+	local increaseStrength = (button == love.mouse_left and keys.shift() and clickedV ~= nil)
+
 	
 	local headNode = nil
 	if createNode then
@@ -357,15 +360,19 @@ mousepressed = function(x,y,button)
 		elseif selection.object.objType == objects.types.arc then
 			tailNode = selection.object.head
 		end
-		if tailNode ~= nil and not objects.arc.exists(tailNode,headNode) then
+		if tailNode ~= nil and not objects.arc.exists(tailNode,headNode) and tailNode ~= headNode then
 			local newArc = objects.arc.getNew(tailNode,headNode)
 			table.insert(objects.collection,newArc)
 		end
 	end
 	
 	if destroy then
-		clickedV:destroy()
-		selection.object = nil
+		if clickedV.activationStrength > 1 then
+			clickedV.activationStrength = 1
+		else
+			clickedV:destroy()
+			selection.object = nil
+		end
 	else
 		selection.object = headNode
 	end
@@ -376,8 +383,12 @@ mousepressed = function(x,y,button)
 		if clickedV.objType == objects.types.arc then
 			table.insert(objects.collection, objects.signal.getNew(clickedV))
 		elseif clickedV.objType == objects.types.node then
-			clickedV:stimulate()
+			clickedV:stimulate(1)
 		end
+	end
+	
+	if increaseStrength then
+		clickedV.activationStrength = clickedV.activationStrength + 0.5
 	end
 	
 end
