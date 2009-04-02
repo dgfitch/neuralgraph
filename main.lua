@@ -36,7 +36,7 @@ geo = {
 music = {
 	lastTime = 0,
 	currentTime = 0,
-	quantizer = 0.0625,
+	quantizer = 0.1,
 }
 
 objects = {
@@ -288,7 +288,6 @@ objects = {
 		
 		segmentMarkerColor = love.graphics.newColor(0,0,0),
 		segmentMarkerRadius = 4,
-		lenPerSegment = 50,
 		
 		exists = function(nodeTail, nodeHead)
 			for k,v in ipairs(objects.collection) do
@@ -442,6 +441,11 @@ draw = function()
 	for k,v in ipairs(objects.collection) do
 		v:draw()
 	end
+	if debug then
+		love.graphics.setColor(love.graphics.newColor(0,0,0,255))
+		love.graphics.draw("DEBUG", 2, 12)
+		love.graphics.draw(string.format("Quantizer: %.5f", music.quantizer), 2, 24)
+	end
 end
 
 garbageCollect = function()
@@ -488,6 +492,12 @@ keypressed = function(key)
 	end
 	if key == love.key_d then
 		debug = not debug
+	end
+	if key == love.key_down then
+		music.quantizer = music.quantizer + 0.01
+	end
+	if key == love.key_up then
+		music.quantizer = music.quantizer - 0.01
 	end
 end
 
