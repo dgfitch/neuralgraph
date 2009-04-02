@@ -10,6 +10,10 @@ keys = {
 	end,
 }
 
+font = love.graphics.newFont(love.default_font, 12)
+love.graphics.setFont(font)
+debug = false
+
 geo = {
 	distance = function(x1,y1,x2,y2)
 		return math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
@@ -73,7 +77,6 @@ objects = {
 		end,
 		
 		
-		
 		nodeTypes = {
 			-- excite
 			{
@@ -96,6 +99,9 @@ objects = {
 				polarity = 1,
 				image = 0,
 				sound = 0,
+				text = function(o)
+          return o:activationAsString()
+        end,
 			},
 			
 			-- inhibit
@@ -118,7 +124,10 @@ objects = {
 				end,
 				polarity = -1,
 				image = love.graphics.newImage("inhibitor.png"),
-				sound = 0
+				sound = 0,
+				text = function(o)
+          return o:activationAsString()
+        end,
 			},
 			
 			-- clock
@@ -134,6 +143,9 @@ objects = {
 				polarity = 1,
 				image = love.graphics.newImage("clock.png"),
 				sound = 0,
+				text = function(o)
+          return "clock:" .. music.quantizer
+        end,
 			},
 			
 			-- filter
@@ -152,7 +164,11 @@ objects = {
 				polarity = 1,
 				image = love.graphics.newImage("filter.png"),
 				sound = 0,
+				text = function(o)
+          return o:activationAsString()
+        end,
 			},
+
 			-- inverter
 			{
 				stimulate = function(o,strength)
@@ -170,6 +186,9 @@ objects = {
 				polarity = 1,
 				image = love.graphics.newImage("inverter.png"),
 				sound = 0,
+				text = function(o)
+          return o:activationAsString()
+        end,
 			},
 			
 			-- player
@@ -189,6 +208,9 @@ objects = {
 				polarity = 1,
 				image = love.graphics.newImage("player.png"),
 				sound = love.audio.newSound("sounds/q.ogg"),
+				text = function(o)
+          return "sound:q.ogg"
+        end,
 			},
 		},
 		
@@ -226,7 +248,10 @@ objects = {
 			love.graphics.circle(love.draw_line,o.x,o.y,o.radius,36)
 			
 			if o.image ~= 0 then love.graphics.draw(o.image,o.x,o.y) end
-			
+
+		  if debug and o:contains(love.mouse.getX(), love.mouse.getY()) then
+        love.graphics.draw(o:text(), o.x + 20, o.y + 4)
+      end
 		end,
 		
 		destroy = function(o)
@@ -246,6 +271,9 @@ objects = {
 				isDestructible = true,
 				type = objects.node,
 				dead = false,
+        activationAsString = function(o)
+          return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
+        end,
 			}
 			objects.node.enforceNodeType(result,1)
 			return result
@@ -452,6 +480,15 @@ update = function(dt)
 		selection.time = selection.time + dt
 	end
 	garbageCollect()
+end
+
+keypressed = function(key)
+  if key == love.key_r then
+    love.system.restart()
+  end
+  if key == love.key_d then
+    debug = not debug
+  end
 end
 
 mousepressed = function(x,y,button)
