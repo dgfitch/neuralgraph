@@ -100,8 +100,8 @@ objects = {
 				image = 0,
 				sound = 0,
 				text = function(o)
-          return o:activationAsString()
-        end,
+					return o:activationAsString()
+				end,
 			},
 			
 			-- inhibit
@@ -126,8 +126,8 @@ objects = {
 				image = love.graphics.newImage("inhibitor.png"),
 				sound = 0,
 				text = function(o)
-          return o:activationAsString()
-        end,
+					return o:activationAsString()
+				end,
 			},
 			
 			-- clock
@@ -138,14 +138,14 @@ objects = {
 				end,
 				update = function(o,dt)
 					objects.node.update(o,dt)
-					if music.fire then  o:fire()  end
+					if music.fire then	o:fire()	end
 				end,
 				polarity = 1,
 				image = love.graphics.newImage("clock.png"),
 				sound = 0,
 				text = function(o)
-          return "clock:" .. music.quantizer
-        end,
+					return "clock:" .. music.quantizer
+				end,
 			},
 			
 			-- filter
@@ -165,8 +165,8 @@ objects = {
 				image = love.graphics.newImage("filter.png"),
 				sound = 0,
 				text = function(o)
-          return o:activationAsString()
-        end,
+					return o:activationAsString()
+				end,
 			},
 
 			-- inverter
@@ -187,8 +187,8 @@ objects = {
 				image = love.graphics.newImage("inverter.png"),
 				sound = 0,
 				text = function(o)
-          return o:activationAsString()
-        end,
+					return o:activationAsString()
+				end,
 			},
 			
 			-- player
@@ -209,8 +209,8 @@ objects = {
 				image = love.graphics.newImage("player.png"),
 				sound = love.audio.newSound("sounds/q.ogg"),
 				text = function(o)
-          return "sound:q.ogg"
-        end,
+					return "sound:q.ogg"
+				end,
 			},
 		},
 		
@@ -249,9 +249,9 @@ objects = {
 			
 			if o.image ~= 0 then love.graphics.draw(o.image,o.x,o.y) end
 
-		  if debug and o:contains(love.mouse.getX(), love.mouse.getY()) then
-        love.graphics.draw(o:text(), o.x + 20, o.y + 4)
-      end
+			if debug and o:contains(love.mouse.getX(), love.mouse.getY()) then
+				love.graphics.draw(o:text(), o.x + 20, o.y + 4)
+			end
 		end,
 		
 		destroy = function(o)
@@ -271,9 +271,9 @@ objects = {
 				isDestructible = true,
 				type = objects.node,
 				dead = false,
-        activationAsString = function(o)
-          return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
-        end,
+				activationAsString = function(o)
+					return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
+				end,
 			}
 			objects.node.enforceNodeType(result,1)
 			return result
@@ -483,12 +483,12 @@ update = function(dt)
 end
 
 keypressed = function(key)
-  if key == love.key_r then
-    love.system.restart()
-  end
-  if key == love.key_d then
-    debug = not debug
-  end
+	if key == love.key_r then
+		love.system.restart()
+	end
+	if key == love.key_d then
+		debug = not debug
+	end
 end
 
 mousepressed = function(x,y,button)
@@ -581,3 +581,5 @@ end
 mousereleased = function(x,y,button)
 	selection.time = 0
 end
+
+-- vim:noexpandtab:ts=2 sts=2
