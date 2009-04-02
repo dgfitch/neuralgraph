@@ -40,7 +40,7 @@ music = {
 }
 
 objects = {
-
+	bgColor = love.graphics.newColor(128,128,128),
 	selectedColor = love.graphics.newColor(255,255,255),
 	nonSelectedColor = love.graphics.newColor(0,0,0),
 	
@@ -317,6 +317,7 @@ objects = {
 			end
 			
 			local lineLength = geo.distance(o.head.x,o.head.y,o.tail.x,o.tail.y)
+			-- trueLength is unused
 			local trueLength = lineLength - o.head.radius - o.tail.radius
 			local lineAngle = math.atan2(o.head.y-o.tail.y,o.head.x-o.tail.x)
 			local tx = o.tail.x + math.cos(lineAngle)*o.tail.radius
@@ -332,12 +333,12 @@ objects = {
 			love.graphics.line(hx,hy,hx-math.cos(angle1)*length,hy+math.sin(angle1)*length)
 			love.graphics.line(hx,hy,hx-math.cos(angle2)*length,hy+math.sin(angle2)*length)
 			
-			love.graphics.setColor(objects.arc.segmentMarkerColor)
+			love.graphics.setColor(objects.bgColor)
 			for s = 1,(o.segments-1) do
 				local d = s/(o.segments)
-				local sx = (o.tail.x - o.head.x)*d + o.head.x
-				local sy = (o.tail.y - o.head.y)*d + o.head.y
-				love.graphics.circle(love.draw_fill,sx,sy,objects.arc.segmentMarkerRadius + o.activationStrength)
+				local sx = (o.head.x - o.tail.x)*d / 1.1 + o.tail.x
+				local sy = (o.head.y - o.tail.y)*d / 1.1 + o.tail.y
+				love.graphics.circle(love.draw_fill,sx,sy,1 + o.activationStrength)
 			end			
 		end,
 		
@@ -358,7 +359,7 @@ objects = {
 			return {
 				head = nodeHead,
 				tail = nodeTail,
-				segments = 1,
+				segments = 4,
 				activationStrength = 1,
 				contains = objects.arc.contains,
 				draw = objects.arc.draw,
@@ -435,8 +436,7 @@ load = function()
 end
 
 draw = function()
-	local bgColor = love.graphics.newColor(128,128,128)
-	love.graphics.setColor(bgColor)
+	love.graphics.setColor(objects.bgColor)
 	love.graphics.rectangle(love.draw_fill,0,0,800,600)
 	for k,v in ipairs(objects.collection) do
 		v:draw()
