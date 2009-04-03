@@ -45,7 +45,7 @@ draw = function()
     love.graphics.setColor(love.graphics.newColor(0,0,0,255))
     love.graphics.draw("DEBUG", 2, 12)
     love.graphics.draw(string.format("Quantizer: %.5f", music.quantizer), 2, 24)
-    love.graphics.draw("SOUNDS: " .. samples.tostring, 2, 36)
+    love.graphics.draw("Samples loaded: " .. #samples, 2, 36)
   end
 end
 

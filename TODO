@@ -1,0 +1,4 @@
+- don't allow two nodes to be connected in both directions, or improve drawing 
+  so the overlap/selection of them is clearer
+- un-break the quantize step timing
+- make samples actually work
