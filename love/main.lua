@@ -2,6 +2,7 @@ music = {
   lastTime = 0,
   currentTime = 0,
   quantizer = 0.1,
+  bpm = 120,
 }
 
 objects = {
@@ -44,7 +45,7 @@ draw = function()
   if debug then
     love.graphics.setColor(love.graphics.newColor(0,0,0,255))
     love.graphics.draw("DEBUG", 2, 12)
-    love.graphics.draw(string.format("Quantizer: %.5f", music.quantizer), 2, 24)
+    love.graphics.draw(string.format("T: %.5f 16: %.5f Q: %.5f BPM: %.1f", music.currentTime, music.sixteenth, music.quantizer, music.bpm), 2, 24)
     love.graphics.draw("Samples loaded: " .. #samples, 2, 36)
   end
 end
@@ -72,9 +73,10 @@ end
 
 update = function(dt)
   music.currentTime = music.currentTime + dt
-  music.fire = music.currentTime - music.lastTime > music.quantizer 
+  music.sixteenth = 1 / (music.bpm / 60 * 4)
+  music.fire = music.currentTime - music.lastTime > sixteenth
   if music.fire then
-    music.lastTime = music.lastTime + music.quantizer
+    music.lastTime = music.currentTime
   end
   for k,v in ipairs(objects.collection) do
     v:update(dt)
