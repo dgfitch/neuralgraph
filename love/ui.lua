@@ -112,6 +112,14 @@ mousepressed = function(x,y,button)
   if changeNode then
     objects.node.advanceNodeType(clickedV)
   end
+
+  if changeSample then
+    clickedV.soundIndex = clickedV.soundIndex + 1
+    if clickedV.soundIndex > #samples then
+      clickedV.soundIndex = 0
+    end
+    clickedV.sound = nil
+  end
 end
 
 mousereleased = function(x,y,button)

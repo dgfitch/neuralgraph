@@ -49,7 +49,6 @@ objects.node = {
       end,
       polarity = 1,
       image = 0,
-      sound = 0,
       text = function(o)
         return o:activationAsString()
       end,
@@ -75,7 +74,6 @@ objects.node = {
       end,
       polarity = -1,
       image = love.graphics.newImage("img/inhibitor.png"),
-      sound = 0,
       text = function(o)
         return o:activationAsString()
       end,
@@ -93,7 +91,6 @@ objects.node = {
       end,
       polarity = 1,
       image = love.graphics.newImage("img/clock.png"),
-      sound = 0,
       text = function(o)
         return "clock:" .. music.quantizer
       end,
@@ -114,7 +111,6 @@ objects.node = {
       end,
       polarity = 1,
       image = love.graphics.newImage("img/filter.png"),
-      sound = 0,
       text = function(o)
         return o:activationAsString()
       end,
@@ -136,7 +132,6 @@ objects.node = {
       end,
       polarity = 1,
       image = love.graphics.newImage("img/inverter.png"),
-      sound = 0,
       text = function(o)
         return o:activationAsString()
       end,
@@ -150,7 +145,10 @@ objects.node = {
       fire = function(o)
         objects.node.fire(o)
         o.activation = 0
-        if o.sound ~= 0 then love.audio.play(o.sound) end
+        if o.sound == nil then
+          o.sound = love.audio.newSound(samples[o.soundIndex])
+        end
+        if o.sound ~= nil then love.audio.play(o.sound) end
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
@@ -158,9 +156,8 @@ objects.node = {
       end,
       polarity = 1,
       image = love.graphics.newImage("img/player.png"),
-      sound = love.audio.newSound("sounds/q.ogg"),
       text = function(o)
-        return "sound:q.ogg"
+        return "sound:" .. samples[o.soundIndex]
       end,
     },
   },
@@ -225,6 +222,8 @@ objects.node = {
       activationAsString = function(o)
         return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
       end,
+      sound = nil,
+      soundIndex = 0,
     }
     objects.node.enforceNodeType(result,1)
     return result
