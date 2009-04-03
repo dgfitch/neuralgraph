@@ -21,10 +21,10 @@ keypressed = function(key)
     debug = not debug
   end
   if key == love.key_down then
-    music.quantizer = music.quantizer + 0.01
+    clock.bpm = clock.bpm - 1
   end
   if key == love.key_up then
-    music.quantizer = music.quantizer - 0.01
+    clock.bpm = clock.bpm + 1
   end
 end
 

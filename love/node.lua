@@ -22,7 +22,9 @@ objects.node = {
       end
     end
     for k,v in ipairs(arcs) do
-      table.insert(objects.collection, objects.signal.getNew(v,o.polarity))
+      local signal = objects.signal.getNew(v,o.polarity)
+      signal.progress = clock.lag
+      table.insert(objects.collection, signal)
     end
     o.activation = math.max(0,o.activation - o.activationStrength)
   end,
@@ -39,7 +41,7 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire then
+        if clock.fire then
           if o.activation > objects.node.activationThreshold then
             o:fire()
             o.activation = -o.activationStrength/4
@@ -64,7 +66,7 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire then
+        if clock.fire then
           if o.activation > objects.node.activationThreshold then
             o:fire()
             o.activation = -o.activationStrength/4
@@ -87,12 +89,12 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire then  o:fire()  end
+        if clock.fire then  o:fire()  end
       end,
       polarity = 1,
       image = love.graphics.newImage("img/clock.png"),
       text = function(o)
-        return "clock:" .. music.quantizer
+        return "clock:" .. clock.sixteenth()
       end,
     },
 
@@ -107,7 +109,7 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire and math.abs(o.activation) > 1 then o:fire() end
+        if clock.fire and math.abs(o.activation) > 1 then o:fire() end
       end,
       polarity = 1,
       image = love.graphics.newImage("img/filter.png"),
@@ -128,7 +130,7 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire and o.activation ~= 0 then o:fire() end
+        if clock.fire and o.activation ~= 0 then o:fire() end
       end,
       polarity = 1,
       image = love.graphics.newImage("img/inverter.png"),
@@ -152,7 +154,7 @@ objects.node = {
       end,
       update = function(o,dt)
         objects.node.update(o,dt)
-        if music.fire and o.activation > 0 then o:fire() end
+        if clock.fire and o.activation > 0 then o:fire() end
       end,
       polarity = 1,
       image = love.graphics.newImage("img/player.png"),

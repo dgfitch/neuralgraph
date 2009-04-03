@@ -1,10 +1,3 @@
-music = {
-  lastTime = 0,
-  currentTime = 0,
-  quantizer = 0.1,
-  bpm = 120,
-}
-
 objects = {
   bgColor = love.graphics.newColor(128,128,128),
   selectedColor = love.graphics.newColor(255,255,255),
@@ -28,6 +21,7 @@ require "signal"
 require "geo"
 require "ui"
 require "sound"
+require "clock"
 
 load = function()
   debug = false
@@ -45,7 +39,7 @@ draw = function()
   if debug then
     love.graphics.setColor(love.graphics.newColor(0,0,0,255))
     love.graphics.draw("DEBUG", 2, 12)
-    love.graphics.draw(string.format("T: %.5f 16: %.5f Q: %.5f BPM: %.1f", music.currentTime, music.sixteenth, music.quantizer, music.bpm), 2, 24)
+    love.graphics.draw(string.format("T: %.5f Lag: %.5f 16: %.5f BPM: %.1f", clock.currentTime, clock.lag, clock.sixteenth(), clock.bpm), 2, 24)
     love.graphics.draw("Samples loaded: " .. #samples, 2, 36)
   end
 end
@@ -72,12 +66,7 @@ garbageCollect = function()
 end
 
 update = function(dt)
-  music.currentTime = music.currentTime + dt
-  music.sixteenth = 1 / (music.bpm / 60 * 4)
-  music.fire = music.currentTime - music.lastTime > sixteenth
-  if music.fire then
-    music.lastTime = music.currentTime
-  end
+  clock.update(dt)
   for k,v in ipairs(objects.collection) do
     v:update(dt)
   end

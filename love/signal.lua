@@ -29,7 +29,7 @@ objects.signal = {
       s.dead = true
       s.arc.head:stimulate(s.arc.activationStrength*s.polarity)
     end
-    s.progress = s.progress + dt/music.quantizer 
+    s.progress = s.progress + dt/clock.sixteenth()
   end,
 
   destroy = function(s)
