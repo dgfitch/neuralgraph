@@ -44,19 +44,20 @@ objects.arc = {
 
     love.graphics.line(tx,ty,hx,hy)
 
+    -- head
     local angle1 = -lineAngle + objects.arc.arrowAngle
     local angle2 = -lineAngle - objects.arc.arrowAngle
     local length = objects.arc.arrowLength
     love.graphics.line(hx,hy,hx-math.cos(angle1)*length,hy+math.sin(angle1)*length)
     love.graphics.line(hx,hy,hx-math.cos(angle2)*length,hy+math.sin(angle2)*length)
 
-    love.graphics.setColor(objects.bgColor)
-    for s = 1,(o.segments-1) do
-      local d = s/(o.segments)
-      local sx = (o.head.x - o.tail.x)*d / 1.1 + o.tail.x
-      local sy = (o.head.y - o.tail.y)*d / 1.1 + o.tail.y
-      love.graphics.circle(love.draw_fill,sx,sy,1 + o.activationStrength)
-    end
+    local perpAngle = lineAngle + math.pi/2
+    local cx = o.head.x - (o.head.x - o.tail.x) / 2
+    local cy = o.head.y - (o.head.y - o.tail.y) / 2
+    length = 1.4 * (o.segments)
+    local px = math.cos(perpAngle)*length
+    local py = math.sin(perpAngle)*length
+    love.graphics.line(cx-px,cy-py,cx+px,cy+py)
   end,
 
   destroy = function(o)
