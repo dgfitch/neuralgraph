@@ -26,11 +26,13 @@ require "arc"
 require "signal"
 require "geo"
 require "ui"
+require "sound"
 
 load = function()
+  debug = false
   font = love.graphics.newFont(love.default_font, 12)
   love.graphics.setFont(font)
-  debug = false
+  samples = sound.list()
 end
 
 draw = function()
@@ -43,6 +45,7 @@ draw = function()
     love.graphics.setColor(love.graphics.newColor(0,0,0,255))
     love.graphics.draw("DEBUG", 2, 12)
     love.graphics.draw(string.format("Quantizer: %.5f", music.quantizer), 2, 24)
+    love.graphics.draw("SOUNDS: " .. samples.tostring, 2, 36)
   end
 end
 
