@@ -15,8 +15,7 @@ objects.signal = {
     end
     local d = s.progress / s.arc.segments
     d = math.min(d,1.0)
-    local x = (s.arc.head.x - s.arc.tail.x)*d + s.arc.tail.x
-    local y = (s.arc.head.y - s.arc.tail.y)*d + s.arc.tail.y
+    local x,y = objects.arc.getPointAt(s.arc,d)
     love.graphics.circle(love.draw_fill,x,y,objects.signal.radius)
   end,
 
