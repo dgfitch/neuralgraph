@@ -1,4 +1,4 @@
-NeuralGraph: a mouse-driven graph editor that allows you to send signals around your graph as if it were a neural network.  Audio output triggered by nodes "firing" is coming very soon.
+NeuralGraph: a mouse-driven graph editor that allows you to send signals around your graph as if it were a neural network.
 
 To use: (these controls will probably change in the not-too-distant future)
 
@@ -19,6 +19,13 @@ Alt-right-click       |   deselect everything      decrease node's strength*   d
 ----------------------+-----------------------------------------------------------------------------------
 
 If a strength or transmission time is reduced to zero, the corresponding entity is destroyed.
+
+
+r       = restart
+d       = debug mode
+up/down = bpm adjustment
+s       = save
+l       = load
 
 
 

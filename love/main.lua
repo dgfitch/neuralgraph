@@ -22,6 +22,7 @@ require "signal.lua"
 require "ui.lua"
 require "sound.lua"
 require "clock.lua"
+require "data.lua"
 
 load = function()
   debug = false
