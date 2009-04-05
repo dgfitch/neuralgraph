@@ -23,17 +23,19 @@ objects.node = {
     end
     for k,v in ipairs(arcs) do
       local signal = objects.signal.getNew(v,o.polarity)
-      signal.progress = clock.lag
+      signal.progress = o.timeCorrection + clock.lag
       table.insert(objects.collection, signal)
     end
+    o.timeCorrection = 0
   end,
 
 
   nodeTypes = {
     -- excite
     {
-      stimulate = function(o, strength)
+      stimulate = function(o, strength, timeCorrection)
         o.activation = o.activation + (strength*objects.node.activationStrength)
+        if o.timeCorrection == 0 then o.timeCorrection = timeCorrection end
       end,
       fire = function(o)
         objects.node.fire(o)
@@ -57,8 +59,9 @@ objects.node = {
 
     -- inhibit
     {
-      stimulate = function(o, strength)
+      stimulate = function(o, strength, timeCorrection)
         o.activation = o.activation + (strength*objects.node.activationStrength)
+        if o.timeCorrection == 0 then o.timeCorrection = timeCorrection end
       end,
       fire = function(o)
         objects.node.fire(o)
@@ -82,7 +85,7 @@ objects.node = {
 
     -- clock
     {
-      stimulate = function(o,strength) end,
+      stimulate = function(o,strength, timeCorrection) end,
       fire = function(o)
         objects.node.fire(o)
       end,
@@ -99,9 +102,10 @@ objects.node = {
 
     -- filter
     {
-      stimulate = function(o,strength)
+      stimulate = function(o,strength, timeCorrection)
         o.polarity = strength/math.abs(strength)
         o.activation = o.activation + o.polarity
+        if o.timeCorrection == 0 then o.timeCorrection = timeCorrection end
       end,
       fire = function(o)
         objects.node.fire(o)
@@ -120,8 +124,9 @@ objects.node = {
 
     -- inverter
     {
-      stimulate = function(o,strength)
+      stimulate = function(o,strength, timeCorrection)
         o.activation = o.activation -strength
+        if o.timeCorrection == 0 then o.timeCorrection = timeCorrection end
       end,
       fire = function(o)
         o.polarity = o.activation / math.abs(o.activation)
@@ -141,8 +146,9 @@ objects.node = {
 
     -- player
     {
-      stimulate = function(o,strength)
+      stimulate = function(o,strength, timeCorrection)
         o.activation = o.activation + 1
+        if o.timeCorrection == 0 then o.timeCorrection = timeCorrection end
       end,
       fire = function(o)
         objects.node.fire(o)
@@ -213,6 +219,7 @@ objects.node = {
       x = nx,
       y = ny,
       activationStrength = objects.node.activationStrength,
+      timeCorrection = 0,
       radius = objects.node.defaultRadius,
       activation = 0,
       contains = objects.node.contains,

@@ -8,7 +8,7 @@ clock = {
   lag = 0,
   update = function(dt)
     clock.currentTime = clock.currentTime + dt
-    clock.lag = (clock.currentTime - clock.lastTime) % clock.sixteenth()
+    clock.lag = clock.currentTime - clock.lastTime
     clock.fire = clock.currentTime - clock.lastTime > clock.sixteenth()
     if clock.fire then
       clock.lastTime = clock.currentTime

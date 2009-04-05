@@ -26,7 +26,7 @@ objects.signal = {
     end
     if s.progress > s.arc.segments then
       s.dead = true
-      s.arc.head:stimulate(s.arc.activationStrength*s.polarity)
+      s.arc.head:stimulate(s.arc.activationStrength*s.polarity,s.progress-s.arc.segments)
     end
     s.progress = s.progress + dt/clock.sixteenth()
   end,

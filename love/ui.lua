@@ -88,7 +88,7 @@ mousepressed = function(x,y,button)
     if clickedV.type==objects.arc then
       table.insert(objects.collection, objects.signal.getNew(clickedV,1))
     elseif clickedV.type==objects.node then
-      clickedV:stimulate(1)
+      clickedV:stimulate(1,0)
     end
   end
 
