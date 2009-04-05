@@ -26,7 +26,6 @@ objects.node = {
       signal.progress = clock.lag
       table.insert(objects.collection, signal)
     end
-    o.activation = math.max(0,o.activation - o.activationStrength)
   end,
 
 
