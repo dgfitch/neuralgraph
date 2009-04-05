@@ -101,7 +101,8 @@ objects.node = {
     -- filter
     {
       stimulate = function(o,strength)
-        o.activation = o.activation + strength/math.abs(strength)
+        o.polarity = strength/math.abs(strength)
+        o.activation = o.activation + o.polarity
       end,
       fire = function(o)
         objects.node.fire(o)
@@ -121,7 +122,7 @@ objects.node = {
     -- inverter
     {
       stimulate = function(o,strength)
-        o.activation = -strength
+        o.activation = o.activation -strength
       end,
       fire = function(o)
         o.polarity = o.activation / math.abs(o.activation)
