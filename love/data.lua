@@ -1,7 +1,6 @@
 data = {
   -- largely from 12.1 of PIL
   serialize = function(o,s)
-    io.write("IN SERIALIZE")
     if s == nil then
       s = ""
     end
@@ -13,7 +12,6 @@ data = {
       s = s .. "{\n"
       for k,v in pairs(o) do
         if not k ~= "update" then
-          io.write("serializing table with key " .. k)
           s = s .. " " .. k .. " = " .. data.serialize(v) .. ",\n"
         end
       end
@@ -21,7 +19,6 @@ data = {
     else
       error("cannot serialize a " .. type(o))
     end
-    io.write("built " .. s)
     return s
   end,
   save = function(name)
