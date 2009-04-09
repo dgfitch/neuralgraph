@@ -1,4 +1,6 @@
 require 'data'
+require 'love_stubs'
+require 'main'
 require 'lunity'
 module( 'TEST_DATA', lunity )
 
