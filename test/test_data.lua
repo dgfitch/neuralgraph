@@ -1,4 +1,6 @@
 require 'data'
+require 'test_mocks'
+require 'main'
 require 'lunity'
 module( 'TEST_DATA', lunity )
 

@@ -15,14 +15,14 @@ selection = {
   dragThreshold = 0.1
 }
 
-require "geo.lua"
-require "node.lua"
-require "arc.lua"
-require "signal.lua"
-require "ui.lua"
-require "sound.lua"
-require "clock.lua"
-require "data.lua"
+require "geo"
+require "node"
+require "arc"
+require "signal"
+require "ui"
+require "sound"
+require "clock"
+require "data"
 
 load = function()
   debug = false
