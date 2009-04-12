@@ -51,10 +51,42 @@ end
 function test_007_Serialize_SingleNode()
   prepareObjects()
   local node = objects.node.getNew(1,2)
-  table.insert(objects.collection,node)
+  local s = data.serialize{object=node, ignore=true}
+  assertMatches( s, 'x = 1' )
+  assertMatches( s, 'y = 2' )
+end
+
+function test_007_Serialize_MultipleNodes()
+  prepareObjects()
+  local node1 = objects.node.getNew(1,2)
+  local node2 = objects.node.getNew(3,4)
+  table.insert(objects.collection,node1)
+  table.insert(objects.collection,node2)
+  local s = data.serialize{object=objects.collection, ignore=true}
+  assertMatches( s, '1 = {' )
+  assertMatches( s, 'x = 1' )
+  assertMatches( s, 'y = 2' )
+  assertMatches( s, '2 = {' )
+  assertMatches( s, 'x = 3' )
+  assertMatches( s, 'y = 4' )
+end
+
+function ignore_test_007_Serialize_NodesAndArc()
+  prepareObjects()
+
+  local node1 = objects.node.getNew(1,2)
+  local node2 = objects.node.getNew(3,4)
+  table.insert(objects.collection,node1)
+  table.insert(objects.collection,node2)
+
+  local arc = objects.arc.getNew(node1,node2)
+  table.insert(objects.collection,arc)
+
   local s = data.serialize{object=objects.collection, ignore=true}
   assertMatches( s, 'x = 1' )
   assertMatches( s, 'y = 2' )
+  assertMatches( s, 'head = 1' )
+  assertMatches( s, 'tail = 2' )
 end
 
 runTests { useANSI = true }
