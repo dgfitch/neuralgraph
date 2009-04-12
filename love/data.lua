@@ -4,6 +4,7 @@ data = {
     local s = args.string
     local o = args.object
     local depth = args.depth
+    local ignore = args.ignore
 
     if depth == nil then
       depth = 0
@@ -11,6 +12,16 @@ data = {
 
     if s == nil then
       s = ""
+    end
+
+    if ignore == nil then
+      ignore = {}
+    end
+
+    if ignore == true then
+      ignore = {
+      }
+      ignore["type"] = true
     end
 
     local indent = ""
@@ -25,7 +36,13 @@ data = {
     elseif type(o) == "table" then
       s = s .. "{\n"
       for k,v in pairs(o) do
-        s = s .. indent .. "  " .. k .. " = " .. data.serialize{object=v, depth=depth+1} .. ",\n"
+        if (not ignore[k]) then
+          if type(v) == "function" then
+          else
+            local serialized = data.serialize{object=v, depth=depth+1, ignore=ignore}
+            s = s .. indent .. "  " .. k .. " = " .. serialized .. ",\n"
+          end
+        end
       end
       s = s .. indent .. "}\n"
     else

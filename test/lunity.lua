@@ -100,6 +100,19 @@ function assertEqual( actual, expected, msg )
 	return __assertionSucceeded()
 end
 
+function assertMatches( actual, expected, msg )
+	if not string.find(actual, expected) then
+		if not msg then
+			msg = string.format( "assertMatches() failed: expected match for %s, was %s",
+				tostring(expected),
+				tostring(actual)
+			)
+		end
+		error( msg, 2 )
+	end
+	return __assertionSucceeded()
+end
+
 function assertTableEquals( actual, expected, msg, keyPath )
 	-- Easy out
 	if actual == expected then

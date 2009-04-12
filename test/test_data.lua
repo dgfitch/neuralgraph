@@ -40,11 +40,21 @@ function test_005_Serialize_NestedTable()
   assertEqual( data.serialize{object=t}, "{\n  a = \"yo\",\n  b = {\n    y = 2,\n    x = 1,\n  }\n,\n}\n" )
 end
 
-function test_006_Serialize_SingleNode()
+function test_005_Serialize_Can_Ignore()
+  local t = {
+    a = "yo",
+    b = "HOORJ",
+  }
+  assertEqual( data.serialize{object=t, ignore={b=true}}, "{\n  a = \"yo\",\n}\n" )
+end
+
+function test_007_Serialize_SingleNode()
   prepareObjects()
   local node = objects.node.getNew(1,2)
   table.insert(objects.collection,node)
-  assertEqual( data.serialize{object=objects.collection}, "{\n  a = \"yo\",\n  b = 2,\n}\n" )
+  local s = data.serialize{object=objects.collection, ignore=true}
+  assertMatches( s, 'x = 1' )
+  assertMatches( s, 'y = 2' )
 end
 
 runTests { useANSI = true }
