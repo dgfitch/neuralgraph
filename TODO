@@ -1,3 +1,4 @@
-- un-break the quantize step timing
 - make custom samples load
 - how are we going to hook this up to MIDI? because I think that would be SWEET!
+- UI awesomeness
+- working save/load

@@ -1,9 +1,23 @@
 data = {
   -- largely from 12.1 of PIL
-  serialize = function(o,s)
+  serialize = function(args)
+    local s = args.string
+    local o = args.object
+    local depth = args.depth
+
+    if depth == nil then
+      depth = 0
+    end
+
     if s == nil then
       s = ""
     end
+
+    local indent = ""
+    for i=1,depth do 
+      indent = indent .. "  "
+    end
+
     if type(o) == "number" then
       s = s .. o
     elseif type(o) == "string" then
@@ -11,13 +25,11 @@ data = {
     elseif type(o) == "table" then
       s = s .. "{\n"
       for k,v in pairs(o) do
-        if not k ~= "update" then
-          s = s .. " " .. k .. " = " .. data.serialize(v) .. ",\n"
-        end
+        s = s .. indent .. "  " .. k .. " = " .. data.serialize{object=v, depth=depth+1} .. ",\n"
       end
-      s = s .. "}\n"
+      s = s .. indent .. "}\n"
     else
-      error("cannot serialize a " .. type(o))
+      s = ""
     end
     return s
   end,

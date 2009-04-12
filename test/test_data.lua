@@ -6,19 +6,19 @@ module( 'TEST_DATA', lunity )
 
 
 function prepareObjects()
-  table.clear(objects.collection)
+  objects.collection = {}
 end
 
 function test_001_Serialize_String()
-  assertEqual( data.serialize("a"), "\"a\"" )
+  assertEqual( data.serialize{object="a"}, "\"a\"" )
 end
 
 function test_002_Serialize_Integer()
-  assertEqual( data.serialize(1), "1" )
+  assertEqual( data.serialize{object=1}, "1" )
 end
 
 function test_003_Serialize_Float()
-  assertEqual( data.serialize(1.01), "1.01" )
+  assertEqual( data.serialize{object=1.01}, "1.01" )
 end
 
 function test_004_Serialize_SimpleTable()
@@ -26,7 +26,7 @@ function test_004_Serialize_SimpleTable()
     a = "yo",
     b = 2,
   }
-  assertEqual( data.serialize(t), "{\n a = \"yo\",\n b = 2,\n}\n" )
+  assertEqual( data.serialize{object=t}, "{\n  a = \"yo\",\n  b = 2,\n}\n" )
 end
 
 function test_005_Serialize_NestedTable()
@@ -37,6 +37,14 @@ function test_005_Serialize_NestedTable()
       y = 2,
     },
   }
-  assertEqual( data.serialize(t), "{\n a = \"yo\",\n b = {\n y = 2,\n x = 1,\n}\n,\n}\n" )
+  assertEqual( data.serialize{object=t}, "{\n  a = \"yo\",\n  b = {\n    y = 2,\n    x = 1,\n  }\n,\n}\n" )
 end
+
+function test_006_Serialize_SingleNode()
+  prepareObjects()
+  local node = objects.node.getNew(1,2)
+  table.insert(objects.collection,node)
+  assertEqual( data.serialize{object=objects.collection}, "{\n  a = \"yo\",\n  b = 2,\n}\n" )
+end
+
 runTests { useANSI = true }
