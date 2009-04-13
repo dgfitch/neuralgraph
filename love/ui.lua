@@ -23,8 +23,8 @@ keypressed = function(key)
   if key == love.key_s then
     data.save("test")
   end
-  if key == love.key_l then
-    data.load("test")
+  if key == love.key_a then
+    data.restore("test")
   end
   if key == love.key_down then
     clock.bpm = clock.bpm - 1

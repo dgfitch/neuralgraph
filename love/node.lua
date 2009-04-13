@@ -1,4 +1,5 @@
 objects.node = {
+  typeName = "node",
   defaultRadius = 15,
   activationStrength = 1,
   activationThreshold = 1,

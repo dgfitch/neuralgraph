@@ -1,4 +1,5 @@
 objects.arc = {
+  typeName = "arc",
   arrowAngle = 30*math.pi/180,
   arrowLength = 6,
   thickness = 3,

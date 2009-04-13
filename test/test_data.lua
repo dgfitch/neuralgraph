@@ -71,7 +71,7 @@ function test_007_Serialize_MultipleNodes()
   assertMatches( s, 'y = 4' )
 end
 
-function ignore_test_007_Serialize_NodesAndArc()
+function test_008_Serialize_NodesAndArc()
   prepareObjects()
 
   local node1 = objects.node.getNew(1,2)
@@ -82,11 +82,12 @@ function ignore_test_007_Serialize_NodesAndArc()
   local arc = objects.arc.getNew(node1,node2)
   table.insert(objects.collection,arc)
 
-  local s = data.serialize{object=objects.collection, ignore=true}
-  assertMatches( s, 'x = 1' )
-  assertMatches( s, 'y = 2' )
-  assertMatches( s, 'head = 1' )
-  assertMatches( s, 'tail = 2' )
+  local s = data.serialize_cycles{object=objects.collection, name="objects.collection"}
+  print(s)
+  assertMatches( s, 'objects.collection[3]["type"] = "arc"' )
+  assertMatches( s, 'objects.collection[2]["type"] = "node"' )
+  assertMatches( s, 'objects.collection[3]["head"] = objects.collection[2]' )
+  assertMatches( s, 'objects.collection[3]["tail"] = objects.collection[1]' )
 end
 
 runTests { useANSI = true }

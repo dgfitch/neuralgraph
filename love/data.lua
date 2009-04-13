@@ -1,26 +1,14 @@
 data = {
   -- largely from 12.1 of PIL
   serialize = function(args)
-    local s = args.string
+    local s = args.string or ""
     local o = args.object
-    local depth = args.depth
-    local ignore = args.ignore
+    local depth = args.depth or 0
 
-    if depth == nil then
-      depth = 0
-    end
-
-    if s == nil then
-      s = ""
-    end
-
-    if ignore == nil then
-      ignore = {}
-    end
+    local ignore = args.ignore or {}
 
     if ignore == true then
-      ignore = {
-      }
+      ignore = { }
       ignore["type"] = true
     end
 
@@ -50,21 +38,49 @@ data = {
     end
     return s
   end,
+  serialize_cycles = function(args)
+    local saved = args.saved or {}
+    local name = args.name or "x"
+    local value = args.object
+    local s = name .. " = "
+    if type(value) == "table" then
+      if saved[value] then
+        s = s .. saved[value] .. "\n"
+      else
+        saved[value] = name
+        s = s .. "{}\n"
+        for k,v in pairs(value) do
+          local fieldname = string.format("%s[%s]", name,
+                                          data.serialize{object=k})
+          if k == "type" then
+            s = s .. data.serialize_cycles{name=fieldname, object=v.typeName, saved=saved}
+          else
+            s = s .. data.serialize_cycles{name=fieldname, object=v, saved=saved}
+          end
+        end
+      end
+    else
+      s = s .. data.serialize{object=value} .. "\n"
+    end
+    return s
+  end,
   save = function(name)
-    local crud = data.serialize(objects.collection)
+    local crud = data.serialize_cycles{object=objects.collection, name="objects.collection"}
     local fullname = name .. ".graph"
     if love.filesystem.exists(fullname) then
       love.filesystem.remove(fullname)
     end
     local file = love.filesystem.newFile(fullname,love.file_write)
     love.filesystem.open(file)
-    love.filesystem.write(file,"HEADER\n")
     love.filesystem.write(file,crud)
     love.filesystem.close(file)
   end,
-  load = function()
-    local file = love.filesystem.newFile(name .. ".graph",love.file_read)
-    local content = love.filesystem.read(file)
+  restore = function(name)
+    local fullname = name .. ".graph"
+    local content = love.filesystem.read(fullname)
+    --print(content)
+    loadstring(content)
+    -- TODO: Fix the type to point at the right place
   end,
 }
 

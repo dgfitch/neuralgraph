@@ -1,4 +1,5 @@
 objects.signal = {
+  typeName = "signal",
   exciteColor = love.graphics.newColor(255,0,0),
   inhibitColor = love.graphics.newColor(0,0,255),
   radius = 6,

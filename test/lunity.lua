@@ -103,9 +103,9 @@ end
 function assertMatches( actual, expected, msg )
 	if not string.find(actual, expected) then
 		if not msg then
-			msg = string.format( "assertMatches() failed: expected match for %s, was %s",
+			msg = string.format( "assertMatches() failed: expected match for\n%s\n  got:\n%s...",
 				tostring(expected),
-				tostring(actual)
+				tostring(actual):sub(1,50)
 			)
 		end
 		error( msg, 2 )

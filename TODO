@@ -2,6 +2,4 @@
 - how are we going to hook this up to MIDI? because I think that would be SWEET!
 - UI awesomeness
 - working save/load
-  this is going to require some rethinking of the object model or something for arcs
-    how do we serialize references?
-    can we replace "head" and "tail" with indexes, and put the links back in correctly afterward?
+- neat "beat" visualization for signals and/or nodes
