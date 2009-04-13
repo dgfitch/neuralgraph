@@ -83,11 +83,34 @@ function test_008_Serialize_NodesAndArc()
   table.insert(objects.collection,arc)
 
   local s = data.serialize_cycles{object=objects.collection, name="objects.collection"}
-  print(s)
+  -- not sure why these matches aren't working because these strings are in 
+  -- there... I'm probably not understanding string.find and some of these 
+  -- chars are magic... probably []
   assertMatches( s, 'objects.collection[3]["type"] = "arc"' )
   assertMatches( s, 'objects.collection[2]["type"] = "node"' )
   assertMatches( s, 'objects.collection[3]["head"] = objects.collection[2]' )
   assertMatches( s, 'objects.collection[3]["tail"] = objects.collection[1]' )
+end
+
+function test_009_Serialize_And_Restore_NodesAndArc()
+  prepareObjects()
+
+  local node1 = objects.node.getNew(1,2)
+  local node2 = objects.node.getNew(3,4)
+  table.insert(objects.collection,node1)
+  table.insert(objects.collection,node2)
+
+  local arc = objects.arc.getNew(node1,node2)
+  table.insert(objects.collection,arc)
+
+  local s = data.serialize_cycles{object=objects.collection, name="objects.collection"}
+  loadstring(s)()
+
+  data.repair()
+
+  assertEqual( type(objects.collection[1].type), "table" )
+  assertEqual( type(objects.collection[2].type), "table" )
+  assertEqual( type(objects.collection[3].type), "table" )
 end
 
 runTests { useANSI = true }

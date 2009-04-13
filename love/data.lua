@@ -34,7 +34,7 @@ data = {
       end
       s = s .. indent .. "}\n"
     else
-      s = ""
+      s = "nil"
     end
     return s
   end,
@@ -79,8 +79,32 @@ data = {
     local fullname = name .. ".graph"
     local content = love.filesystem.read(fullname)
     --print(content)
-    loadstring(content)
-    -- TODO: Fix the type to point at the right place
+    assert(loadstring(content)())
+    data.repair()
+  end,
+  repair = function()
+    -- Fix the types to point at the right place
+    for k,v in pairs(objects.collection) do
+      local t
+      if v.type == "node" then
+        t = objects.node
+      elseif v.type == "arc" then
+        t = objects.arc
+      elseif v.type == "signal" then
+        t = objects.signal
+      else
+        error("Unknown type: " .. tostring(v.type))
+      end
+
+      v.type = t
+      if v.type == "node" then
+        enforceNodeType(node, node.nodeType)
+      else
+        v.draw = t.draw
+        v.update = t.update
+        v.destroy = t.destroy
+      end
+    end
   end,
 }
 
