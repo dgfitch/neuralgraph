@@ -54,7 +54,7 @@ objects.node = {
       polarity = 1,
       image = 0,
       text = function(o)
-        return o:activationAsString()
+        return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
       end,
     },
 
@@ -80,7 +80,7 @@ objects.node = {
       polarity = -1,
       image = love.graphics.newImage("img/inhibitor.png"),
       text = function(o)
-        return o:activationAsString()
+        return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
       end,
     },
 
@@ -119,7 +119,7 @@ objects.node = {
       polarity = 1,
       image = love.graphics.newImage("img/filter.png"),
       text = function(o)
-        return o:activationAsString()
+        return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
       end,
     },
 
@@ -141,7 +141,7 @@ objects.node = {
       polarity = 1,
       image = love.graphics.newImage("img/inverter.png"),
       text = function(o)
-        return o:activationAsString()
+        return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
       end,
     },
 
@@ -229,9 +229,6 @@ objects.node = {
       isDestructible = true,
       type = objects.node,
       dead = false,
-      activationAsString = function(o)
-        return string.format("s%.3f ACT%.3f", o.activationStrength, o.activation)
-      end,
       sound = nil,
       soundIndex = 0,
     }

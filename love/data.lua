@@ -21,6 +21,12 @@ data = {
       s = s .. o
     elseif type(o) == "string" then
       s = s .. string.format("%q", o)
+    elseif type(o) == "boolean" then
+      if o then
+        s = s .. "true"
+      else
+        s = s .. "false"
+      end
     elseif type(o) == "table" then
       s = s .. "{\n"
       for k,v in pairs(o) do
@@ -103,6 +109,7 @@ data = {
         v.draw = t.draw
         v.update = t.update
         v.destroy = t.destroy
+        v.contains = t.contains
       end
     end
   end,
