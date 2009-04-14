@@ -106,9 +106,8 @@ data = {
       v.update = t.update
       v.destroy = t.destroy
       v.contains = t.contains
-      v.stimulate = t.stimulate
-      if v.type == "node" then
-        enforceNodeType(node, node.nodeType)
+      if v.type == objects.node then
+        objects.node.enforceNodeType(v, v.nodeType)
       end
     end
   end,

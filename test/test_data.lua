@@ -115,7 +115,6 @@ function test_009_Serialize_And_Restore_NodesAndArc()
   assertEqual( type(objects.collection[3].draw), "function" )
   assertEqual( type(objects.collection[1].stimulate), "function" )
   assertEqual( type(objects.collection[2].stimulate), "function" )
-  assertEqual( type(objects.collection[3].stimulate), "function" )
 end
 
 runTests { useANSI = true }
