@@ -36,7 +36,7 @@ keypressed = function(key)
       end
     end)
   if not status then
-    print(err)
+    print("UI error: " .. err)
   end
 end
 

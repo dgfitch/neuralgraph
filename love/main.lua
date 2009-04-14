@@ -44,7 +44,7 @@ draw = function()
   for k,v in ipairs(objects.collection) do
     status, err = pcall(function () v:draw() end)
     if not status then
-      if err ~= last_draw_error then print(err .. " on key " .. k) end
+      if err ~= last_draw_error then print(string.format("Draw error [%s]: %s", k, err)) end
       last_draw_error = err
     end
   end
@@ -76,7 +76,7 @@ update = function(dt)
   for k,v in ipairs(objects.collection) do
     status, err = pcall(function () v:update(dt) end)
     if not status then
-      if err ~= last_update_error then print(err) end
+      if err ~= last_update_error then print(string.format("Update error [%s]: %s", k, err)) end
       last_update_error = err
     end
   end

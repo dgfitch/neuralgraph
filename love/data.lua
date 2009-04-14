@@ -102,14 +102,14 @@ data = {
       end
 
       v.type = t
-      if v.type == "node" then
-        enforceNodeType(node, node.nodeType)
-      end
       v.draw = t.draw
       v.update = t.update
       v.destroy = t.destroy
       v.contains = t.contains
       v.stimulate = t.stimulate
+      if v.type == "node" then
+        enforceNodeType(node, node.nodeType)
+      end
     end
   end,
 }
