@@ -58,7 +58,9 @@ data = {
         for k,v in pairs(value) do
           local fieldname = string.format("%s[%s]", name,
                                           data.serialize{object=k})
-          if k == "type" then
+          if v == nil or type(v) == "function" then
+            -- do nothing to save space
+          elseif k == "type" then
             s = s .. data.serialize_cycles{name=fieldname, object=v.typeName, saved=saved}
           else
             s = s .. data.serialize_cycles{name=fieldname, object=v, saved=saved}
@@ -71,7 +73,7 @@ data = {
     return s
   end,
   save = function(name)
-    local crud = data.serialize_cycles{object=objects.collection, name="objects.collection"}
+    local crud = data.serialize_cycles{object=objects.collection, name="o"}
     local fullname = name .. ".graph"
     if love.filesystem.exists(fullname) then
       love.filesystem.remove(fullname)
@@ -83,8 +85,15 @@ data = {
   end,
   restore = function(name)
     local fullname = name .. ".graph"
-    local content = love.filesystem.read(fullname)
-    loadstring(content)()
+    objects.collection = {}
+    o = objects.collection
+    line_number = 1
+    for line in love.filesystem.lines(fullname) do
+      if line_number > 1 then
+        loadstring(line)()
+      end
+      line_number = line_number + 1
+    end
     data.repair()
   end,
   repair = function()

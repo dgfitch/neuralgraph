@@ -39,7 +39,7 @@ draw = function()
     love.graphics.draw("DEBUG", 2, 12)
     love.graphics.draw(string.format("T: %.5f Lag: %.5f 16: %.5f BPM: %.1f O: %d", clock.currentTime, clock.lag, clock.sixteenth(), clock.bpm, #objects.collection), 2, 24)
     love.graphics.draw("Samples loaded: " .. #samples, 2, 36)
-    love.graphics.draw(string.format("Draw error: %s Update error: %s", last_draw_error, last_update_error), 2, 48)
+    love.graphics.draw(string.format("Draw error: %s Update error: %s", last_draw_error or "", last_update_error or ""), 2, 48)
   end
   for k,v in ipairs(objects.collection) do
     status, err = pcall(function () v:draw() end)
