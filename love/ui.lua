@@ -11,26 +11,32 @@ keys = {
 }
 
 keypressed = function(key)
-  if key == love.key_escape then
-    love.system.exit()
-  end
-  if key == love.key_r then
-    love.system.restart()
-  end
-  if key == love.key_d then
-    debug = not debug
-  end
-  if key == love.key_s then
-    data.save("test")
-  end
-  if key == love.key_a then
-    data.restore("test")
-  end
-  if key == love.key_down then
-    clock.bpm = clock.bpm - 1
-  end
-  if key == love.key_up then
-    clock.bpm = clock.bpm + 1
+  status, err = pcall(
+    function () 
+      if key == love.key_escape then
+        love.system.exit()
+      end
+      if key == love.key_r then
+        love.system.restart()
+      end
+      if key == love.key_d then
+        debug = not debug
+      end
+      if key == love.key_s then
+        data.save("test")
+      end
+      if key == love.key_a then
+        data.restore("test")
+      end
+      if key == love.key_down then
+        clock.bpm = clock.bpm - 1
+      end
+      if key == love.key_up then
+        clock.bpm = clock.bpm + 1
+      end
+    end)
+  if not status then
+    print(err)
   end
 end
 

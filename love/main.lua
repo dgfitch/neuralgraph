@@ -34,14 +34,19 @@ end
 draw = function()
   love.graphics.setColor(objects.bgColor)
   love.graphics.rectangle(love.draw_fill,0,0,800,600)
-  for k,v in ipairs(objects.collection) do
-    v:draw()
-  end
   if debug then
     love.graphics.setColor(love.graphics.newColor(0,0,0,255))
     love.graphics.draw("DEBUG", 2, 12)
     love.graphics.draw(string.format("T: %.5f Lag: %.5f 16: %.5f BPM: %.1f O: %d", clock.currentTime, clock.lag, clock.sixteenth(), clock.bpm, #objects.collection), 2, 24)
     love.graphics.draw("Samples loaded: " .. #samples, 2, 36)
+    love.graphics.draw(string.format("Draw error: %s Update error: %s", last_draw_error, last_update_error), 2, 48)
+  end
+  for k,v in ipairs(objects.collection) do
+    status, err = pcall(function () v:draw() end)
+    if not status then
+      if err ~= last_draw_error then print(err .. " on key " .. k) end
+      last_draw_error = err
+    end
   end
 end
 
@@ -69,7 +74,11 @@ end
 update = function(dt)
   clock.update(dt)
   for k,v in ipairs(objects.collection) do
-    v:update(dt)
+    status, err = pcall(function () v:update(dt) end)
+    if not status then
+      if err ~= last_update_error then print(err) end
+      last_update_error = err
+    end
   end
   if love.mouse.isDown(love.mouse_left) and selection.object ~= nil then
     selection.time = selection.time + dt

@@ -84,8 +84,7 @@ data = {
   restore = function(name)
     local fullname = name .. ".graph"
     local content = love.filesystem.read(fullname)
-    --print(content)
-    assert(loadstring(content)())
+    loadstring(content)()
     data.repair()
   end,
   repair = function()
